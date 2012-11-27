@@ -1,0 +1,37 @@
+Look into the file "LICENSE" to see the license.
+
+This is a project for playing Youtube HTML5 in mplayer instead of
+the browser's video implementation. Advantages:
+
+ - speed (chromium hogs over 50% of my CPU for HTML5 video, mplayer
+   needs much less)
+ - the browser doesn't have to be open
+ - starting another video automatically stops the previous one
+ - in audio only mode, the player is entirely invisible and doesn't
+   consume any resources for decoding video data (so it's even faster
+   - think of listening to music from youtube with ~5% CPU usage)
+
+Of course, there are disadvantages:
+
+ - doesn't work with flash-only-videos
+ - ugly GUI that asks you whether you want to use youtube's player or
+   the native one and whether you want video or just audio
+ - you need a webserver and have to add a CGI script to it
+ - you have to give everyone who can run code in the context of the
+   webserver the right to play music and videos in your desktop session
+ - DISPLAY is hardcoded to ":0"
+
+Installation:
+
+ - if you don't want every user on your system to be able to play
+   music and videos in your session, make sure the repository folder is
+   owned by you, has its group set to www-data and has mode 0750
+ - insert a password of your choice in nativevideo.c and nativevideo.user.js
+ - replace /home/jann with your home folder in nativevideo.c
+ - compile the cgi program (`gcc -Wall -Werror -g -o nativevideo nativevideo.c`)
+ - allow the cgi program to do stuff in your name by running `chmod 06755 nativevideo`
+ - make a link from your CGI directory to `nativevideo` (the compiled program)
+   and make sure that your webserver is configured to honor the link
+ - install the userscript (`nativevideo.user.js`) in your browser
+
+Everything should work now.
