@@ -48,7 +48,7 @@ int main() {
         close(pipeA[1]);
         dup2(pipeA[0], 1);
         close(pipeA[0]);
-        execlp("curl", "curl", vidurl, NULL);
+        execlp("curl", "curl", "-L", vidurl, NULL);
         return 1;
       }
       close(pipeA[0]);
