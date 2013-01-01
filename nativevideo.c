@@ -13,7 +13,18 @@ extern char **environ;
 //REPLACE WITH YOUR SECRET; MUST BE THE SAME AS IN THE USERSCRIPT!
 #define SECRET "xxxxxxxx"
 
-int main() {
+int main(int argc, char *argv[]) {
+  uid_t uid = geteuid();
+  setreuid(uid, uid);
+
+  if (argc == 0) return 1; /* dafuq? */
+  if (access("/dev/audio", W_OK)) {
+    // start ourselves with full group privileges
+    // no execlp before clearing the environment!
+    execl("/usr/bin/sg", "sg", "audio", "-c", argv[0], NULL);
+    return 1;
+  }
+
   char *reqpath = getenv("QUERY_STRING");
   if (reqpath == NULL) return 1;
   if (strstr(reqpath, SECRET) == NULL) return 1;
