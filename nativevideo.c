@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
   if (access("/dev/audio", W_OK)) {
     // start ourselves with full group privileges
     *environ = NULL;
-    setenv("QUERY_STRING", reqpath);
+    setenv("QUERY_STRING", reqpath, 0);
     execl("/usr/bin/sg", "sg", "audio", "-c", argv[0], NULL);
     return 1;
   }
