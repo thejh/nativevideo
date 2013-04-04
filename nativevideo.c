@@ -13,6 +13,23 @@ extern char **environ;
 //REPLACE WITH YOUR SECRET; MUST BE THE SAME AS IN THE USERSCRIPT!
 #define SECRET "xxxxxxxx"
 
+#define DEHEXCHR(x) ((x)-'a')
+
+char *dehex(char *str) {
+  int len = strlen(str);
+  if (len%2 != 0) {
+    fprintf(stderr, "hex string with bad length!\n");
+    exit(1);
+  }
+  len /= 2;
+  char *target = malloc(len+1);
+  int i;
+  for (i=0; i<len; i++) {
+    target[i] = (DEHEXCHR(str[2*i+0])<<4) + DEHEXCHR(str[2*i+1]);
+  }
+  return target;
+}
+
 int main(int argc, char *argv[]) {
   uid_t uid = geteuid();
   setreuid(uid, uid);
@@ -34,6 +51,9 @@ int main(int argc, char *argv[]) {
   if (vidurl == NULL) return 1;
   vidurl++;
   int aonly = 0;
+  if (vidurl[0] == 'x') {
+    vidurl = dehex(vidurl+1);
+  }
   if (vidurl[0] == '!') { aonly = 1; vidurl++; }
   if (strncmp(vidurl, "http://", 7) && strncmp(vidurl, "https://", 8)) return 1;
   environ = NULL;
